@@ -1,0 +1,163 @@
+.container {
+    max-width: 800px;
+    padding: 10px;
+    margin: 20px auto;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+@media (max-width: 768px) {
+    .formGrid {
+        grid-template-columns: 1fr;
+        gap: 4px !important;
+    }
+
+    .textfieldGroup {
+        gap: 4px !important;
+    }
+}
+
+.textfieldGroup {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.micButton {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+    height: 25px;
+    width: 25px;
+    margin: auto 5px;
+}
+
+.micButton:hover {
+    background: #0056b3;
+}
+
+.micButton:focus,
+.loginButton:focus {
+    outline: none;
+}
+
+.radioGroup {
+    display: flex;
+    gap: 20px;
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 20px;
+}
+
+.radioGroup label {
+    margin: 0;
+}
+
+.radioGroup input {
+    margin-right: 6px;
+    transform: scale(1.2);
+}
+
+.imageError {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 400;
+    font-size: 0.75rem;
+    line-height: 1.66;
+    letter-spacing: 0.03333em;
+    text-align: left;
+    margin-top: 3px;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-left: 14px;
+    margin-right: 14px;
+    color: #d32f2f;
+}
+
+.webcamContainer {
+    text-align: center;
+}
+
+.webcam {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.captureButton {
+    background: #28a745;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-weight: 500;
+    border-radius: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.captureButton:hover {
+    background: #1e7e34;
+}
+
+.retakeButton {
+    background: #ffc107;
+    border: none;
+    padding: 10px 20px;
+    color: black;
+    font-weight: 500;
+    border-radius: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.retakeButton:hover {
+    background: #e0a800;
+}
+
+.captureButton:focus,
+.retakeButton:focus {
+    outline: none;
+}
+
+.submitWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.submitButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    background-color: #334EAC;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submitButton:hover {
+    background-color: #125ea2;
+}
+
+.link {
+    text-align: center;
+    margin-top: 20px;
+}

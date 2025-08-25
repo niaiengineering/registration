@@ -1,0 +1,18 @@
+/* {
+DarkBlue : #081F5C;
+Blue:#334EAC;
+Black:#303030;
+Background Blue:#D0E3FF;
+Yellow:#FAD627
+Navbar: #D4F5E5
+Blogcreator banner: #FFEEDF
+} */
+ 
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background-color: #f8f9fa;
+}
