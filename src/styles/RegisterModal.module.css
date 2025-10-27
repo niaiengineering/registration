@@ -13,7 +13,7 @@
 }
 
 .popover {
-  background: #ffffff;
+  background: var(--card-bg);
   color: #334EAC;
   margin: 10px;
   padding: 20px;
