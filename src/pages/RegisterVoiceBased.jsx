@@ -3,7 +3,14 @@ import { useEffect, useState, useRef } from 'react';
 import Webcam from 'react-webcam';
 import { toast } from "react-toastify";
 
-import { TextField } from '@mui/material';
+import {
+    TextField,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    FormHelperText
+} from '@mui/material';
 import MicIcon from '@mui/icons-material/Mic';
 import StopIcon from '@mui/icons-material/Stop';
 
@@ -18,11 +25,15 @@ const RegisterVoiceBased = () => {
     const [formData, setFormData] = useState({
         fullName: '',
         parentName: '',
+        emergencyContactName: '',
+        relationship: '',
+        emergencyContactNumber: '',
+        gender: '',
         age: '',
         street: '',
         city: '',
         pincode: '',
-        mobile: '',
+        phone: '',
         email: '',
         imageFile: null
     })
@@ -122,6 +133,24 @@ const RegisterVoiceBased = () => {
             newErrors.parentName = "Parent Name must be at least 3 characters";
         }
 
+        if (formData.emergencyContactName.trim().length < 3) {
+            newErrors.emergencyContactName = "Emergency Contact Name must be at least 3 characters";
+        }
+
+        if (formData.relationship.trim().length < 3) {
+            newErrors.relationship = "Relationship is required";
+        }
+
+        // emergencyContactNumber: 10 digits only
+        const phoneRegex = /^[0-9]{10}$/;
+        if (!phoneRegex.test(formData.emergencyContactNumber)) {
+            newErrors.emergencyContactNumber = "Emergency Contact Number must be exactly 10 digits";
+        }
+
+        if (!formData.gender) {
+            newErrors.gender = "Gender is required";
+        }
+
         const ageRegex = /^[0-9]{1,3}$/;
         if (!ageRegex.test(formData.age)) {
             newErrors.age = "age number must be exactly 10 digits";
@@ -140,10 +169,9 @@ const RegisterVoiceBased = () => {
             newErrors.pincode = "Pincode must be exactly 6 digits";
         }
 
-        // Mobile: 10 digits only
-        const mobileRegex = /^[0-9]{10}$/;
-        if (!mobileRegex.test(formData.mobile)) {
-            newErrors.mobile = "Mobile number must be exactly 10 digits";
+        // phone: 10 digits only
+        if (!phoneRegex.test(formData.phone)) {
+            newErrors.phone = "phone number must be exactly 10 digits";
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -170,11 +198,15 @@ const RegisterVoiceBased = () => {
         const payload = new FormData();
         payload.append('fullName', formData.fullName);
         payload.append('parentName', formData.parentName);
+        payload.append('emergencyContactName', formData.emergencyContactName);
+        payload.append('relationship', formData.relationship);
+        payload.append('emergencyContactNumber', formData.emergencyContactNumber);
+        payload.append('gender', formData.gender);
         payload.append('age', formData.age);
         payload.append('street', formData.street);
         payload.append('city', formData.city);
         payload.append('pincode', formData.pincode);
-        payload.append('mobile', formData.mobile);
+        payload.append('phone', formData.phone);
         payload.append('email', formData.email);
         if (formData.imageFile) {
             payload.append('imageFile', formData.imageFile);
@@ -203,7 +235,7 @@ const RegisterVoiceBased = () => {
         //     street: '',
         //     city: '',
         //     pincode: '',
-        //     mobile: '',
+        //     phone: '',
         //     email: '',
         //     imageFile: null
         // });
@@ -213,7 +245,7 @@ const RegisterVoiceBased = () => {
     }
 
     return (
-        <>
+        <div className={styles.containerWrap}>
             <Navbar />
             <div className={styles.container}>
 
@@ -266,6 +298,7 @@ const RegisterVoiceBased = () => {
                                 {activeField === "parentName" ? <StopIcon style={{ color: 'red' }} /> : <MicIcon fontSize='10px' />}
                             </button>
                         </div>
+
                         {/* Age */}
                         <div className={styles.textfieldGroup}>
                             <TextField
@@ -288,6 +321,98 @@ const RegisterVoiceBased = () => {
                                 {activeField === "age" ? <StopIcon style={{ color: 'red' }} /> : <MicIcon fontSize='10px' />}
                             </button>
                         </div>
+
+                        {/* Gender */}
+                        <div className={styles.textfieldGroup}>
+                            <FormControl fullWidth margin="normal" required error={Boolean(errors.gender)}>
+                                <InputLabel id="gender-label">Gender</InputLabel>
+                                <Select
+                                    labelId="gender-label"
+                                    name="gender"
+                                    value={formData.gender}
+                                    onChange={handleChange}
+                                    label="Gender"
+                                >
+                                    <MenuItem value="male">Male</MenuItem>
+                                    <MenuItem value="female">Female</MenuItem>
+                                    <MenuItem value="prefer-not-to-say">Prefer not to say</MenuItem>
+                                    <MenuItem value="other">Other</MenuItem>
+                                </Select>
+                                {errors.gender && (
+                                    <FormHelperText>{errors.gender}</FormHelperText>
+                                )}
+                            </FormControl>
+                        </div>
+
+                        {/* Emergency contact name */}
+                        <div className={styles.textfieldGroup}>
+                            <TextField
+                                fullWidth label="Emergency contact Name" name="emergencyContactName"
+                                value={formData.emergencyContactName} onChange={handleChange}
+                                margin="normal"
+                                required
+                                error={Boolean(errors.emergencyContactName)} helperText={errors.emergencyContactName}
+                            />
+                            <button
+                                type="button"
+                                tabIndex="-1"
+                                onClick={() =>
+                                    listening
+                                        ? handleStopMic()
+                                        : handleStartMic("emergencyContactName")
+                                }
+                                className={styles.micButton}
+                                title={activeField === "emergencyContactName" ? 'Stop' : 'Start talking'}>
+                                {activeField === "emergencyContactName" ? <StopIcon style={{ color: 'red' }} /> : <MicIcon fontSize='10px' />}
+                            </button>
+                        </div>
+
+                        {/* Emergency contact Relationship */}
+                        <div className={styles.textfieldGroup}>
+                            <TextField
+                                fullWidth label="Relationship" name="relationship"
+                                value={formData.relationship} onChange={handleChange}
+                                margin="normal"
+                                required
+                                error={Boolean(errors.relationship)} helperText={errors.relationship}
+                            />
+                            <button
+                                type="button"
+                                tabIndex="-1"
+                                onClick={() =>
+                                    listening
+                                        ? handleStopMic()
+                                        : handleStartMic("relationship")
+                                }
+                                className={styles.micButton}
+                                title={activeField === "relationship" ? 'Stop' : 'Start talking'}>
+                                {activeField === "relationship" ? <StopIcon style={{ color: 'red' }} /> : <MicIcon fontSize='10px' />}
+                            </button>
+                        </div>
+
+                        {/* Emergency contact number */}
+                        <div className={styles.textfieldGroup}>
+                            <TextField
+                                fullWidth label="Emergency contact Number" name="emergencyContactNumber" type="tel"
+                                value={formData.emergencyContactNumber} onChange={handleChange}
+                                margin="normal"
+                                required
+                                error={Boolean(errors.emergencyContactNumber)} helperText={errors.emergencyContactNumber}
+                            />
+                            <button
+                                type="button"
+                                tabIndex="-1"
+                                onClick={() =>
+                                    listening
+                                        ? handleStopMic()
+                                        : handleStartMic("emergencyContactNumber")
+                                }
+                                className={styles.micButton}
+                                title={activeField === "emergencyContactNumber" ? 'Stop' : 'Start talking'}>
+                                {activeField === "emergencyContactNumber" ? <StopIcon style={{ color: 'red' }} /> : <MicIcon fontSize='10px' />}
+                            </button>
+                        </div>
+
                         {/*Street */}
                         <div className={styles.textfieldGroup}>
                             <TextField
@@ -310,6 +435,7 @@ const RegisterVoiceBased = () => {
                                 {activeField === "street" ? <StopIcon style={{ color: 'red' }} /> : <MicIcon fontSize='10px' />}
                             </button>
                         </div>
+
                         {/* City */}
                         <div className={styles.textfieldGroup}>
                             <TextField
@@ -332,6 +458,7 @@ const RegisterVoiceBased = () => {
                                 {activeField === "city" ? <StopIcon style={{ color: 'red' }} /> : <MicIcon fontSize='10px' />}
                             </button>
                         </div>
+
                         {/* Pincode */}
                         <div className={styles.textfieldGroup}>
                             <TextField
@@ -355,14 +482,15 @@ const RegisterVoiceBased = () => {
                                 {activeField === "pincode" ? <StopIcon style={{ color: 'red' }} /> : <MicIcon fontSize='10px' />}
                             </button>
                         </div>
-                        {/* Mobile */}
+
+                        {/* phone */}
                         <div className={styles.textfieldGroup}>
                             <TextField
-                                fullWidth label="Mobile Number" name="mobile" type="tel"
-                                value={formData.mobile} onChange={handleChange}
+                                fullWidth label="Phone" name="phone" type="tel"
+                                value={formData.phone} onChange={handleChange}
                                 margin="normal"
                                 required
-                                error={Boolean(errors.mobile)} helperText={errors.mobile}
+                                error={Boolean(errors.phone)} helperText={errors.phone}
                             />
                             <button
                                 type="button"
@@ -370,13 +498,14 @@ const RegisterVoiceBased = () => {
                                 onClick={() =>
                                     listening
                                         ? handleStopMic()
-                                        : handleStartMic("mobile")
+                                        : handleStartMic("phone")
                                 }
                                 className={styles.micButton}
-                                title={activeField === "mobile" ? 'Stop' : 'Start talking'}>
-                                {activeField === "mobile" ? <StopIcon style={{ color: 'red' }} /> : <MicIcon fontSize='10px' />}
+                                title={activeField === "phone" ? 'Stop' : 'Start talking'}>
+                                {activeField === "phone" ? <StopIcon style={{ color: 'red' }} /> : <MicIcon fontSize='10px' />}
                             </button>
                         </div>
+
                         {/* Email */}
                         <div className={styles.textfieldGroup}>
                             <TextField
@@ -494,7 +623,7 @@ const RegisterVoiceBased = () => {
             {modalOpen && (
                 <RegisterModal open={modalOpen} handleClose={handleClose} formData={formData} />
             )}
-        </>
+        </div>
     );
 };
 

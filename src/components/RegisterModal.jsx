@@ -163,7 +163,7 @@ export default function RegisterModal({ open, handleClose, formData }) {
             <p className={styles.name}>Name : {formData.fullName}</p>
             <p>City : {formData.city}</p>
             <p>Pincode : {formData.pincode}</p>
-            <p>Mobile : {formData.mobile}</p>
+            <p>Phone : {formData.phone}</p>
           </div>
 
           <button className={styles.confirmBtn} onClick={handleClose}>
