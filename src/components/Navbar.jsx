@@ -27,8 +27,8 @@ const Navbar = () => {
             <nav className={styles.navbar}>
                 {/* Left Section - Logo */}
                 <div className={styles.logo}>
-                    <h3>IPCS</h3>
-                    <p className={styles.heading}>Integrated Patient Care System</p>
+                    <h3>IPC</h3>
+                    <p className={styles.heading}>Integrated Patient Care</p>
                 </div>
                 {/* <button
                     className={styles.themeToggle}
