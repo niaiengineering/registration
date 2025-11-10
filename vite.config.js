@@ -5,6 +5,8 @@ import federation from '@originjs/vite-plugin-federation'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
+  const isProduction = mode === 'production'
+
   return {
     plugins: [
       react(),
@@ -18,7 +20,7 @@ export default defineConfig(({ mode }) => {
       }),
 
       // HMR: notify host to reload when registration rebuilds
-      {
+      !isProduction && {
         name: 'vite-plugin-notify-host-on-rebuild',
         apply(config, { command }) {
           return Boolean(command === 'build' && config.build?.watch)
@@ -33,13 +35,13 @@ export default defineConfig(({ mode }) => {
           }
         },
       },
-    ],
+    ].filter(Boolean),
 
     build: {
-      modulePreload: false,
+      modulePreload: isProduction,
       target: 'esnext',
-      minify: false,
-      cssCodeSplit: false,
+      minify: isProduction ? 'esbuild' : false,
+      cssCodeSplit: isProduction,
     },
 
     // server: {
