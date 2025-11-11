@@ -1,5 +1,8 @@
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { House } from 'lucide-react';
 import HomeIcon from '@mui/icons-material/Home';
 import styles from "../styles/Navbar.module.css";
 
@@ -46,11 +49,11 @@ const Navbar = () => {
                 </button> */}
 
             </nav>
-            <nav aria-label="breadcrumb">
+            {/* <nav aria-label="breadcrumb">
                 <ol className={styles.breadcrumb}>
                     <li className={styles.breadcrumbitem}>
 
-                        <Link to="/"><HomeIcon sx={{ fontSize: 15 }} /></Link>
+                        <Link to="/"><HomeIcon sx={{ fontSize: 20 }} /></Link>
                     </li>
                     {paths.map((path, index) => {
                         const url = `/${paths.slice(0, index + 1).join("/")}`;
@@ -60,6 +63,36 @@ const Navbar = () => {
                             <li key={url} className={styles.breadcrumbitem}>
                                 <Link to={url}>{formattedPath}</Link>
                             </li>
+                        );
+                    })}
+                </ol>
+            </nav> */}
+
+            <nav aria-label="breadcrumb">
+                <ol className={styles.breadcrumb}>
+                    <li className={styles.breadcrumbitem}>
+                        <Link to="/">
+                            <House size={20} style={{ verticalAlign: "middle" }} />
+                        </Link>
+                    </li>
+
+                    {paths.map((path, index) => {
+                        const url = `/${paths.slice(0, index + 1).join("/")}`;
+                        const formattedPath = formatPath(path);
+                        const isLast = index === paths.length - 1;
+
+                        return (
+                            <React.Fragment key={url}>
+                                <li className={styles.breadcrumbseparator}>
+                                    <NavigateNextIcon sx={{ fontSize: 25 }} />
+                                </li>
+                                <li
+                                    className={`${styles.breadcrumbitem} ${isLast ? styles.active : ""
+                                        }`}
+                                >
+                                    <Link to={url}>{formattedPath}</Link>
+                                </li>
+                            </React.Fragment>
                         );
                     })}
                 </ol>
