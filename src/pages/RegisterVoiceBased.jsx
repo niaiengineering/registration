@@ -15,12 +15,16 @@ import MicIcon from '@mui/icons-material/Mic';
 import StopIcon from '@mui/icons-material/Stop';
 
 import useSpeechRecognition from '../hooks/useSpeechRecognition'
+import { useUser } from "host/UserContext";
 
+import AlreadyLoggedInModal from '../components/AlreadyLoggedInModal';
 import Navbar from '../components/Navbar'
 import RegisterModal from '../components/RegisterModal';
 import styles from '../styles/RegisterVoiceBased.module.css';
 
 const RegisterVoiceBased = () => {
+
+    const { user, setUser } = useUser();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         fullName: '',
@@ -242,6 +246,17 @@ const RegisterVoiceBased = () => {
 
         // toast.success('Form submitted successfully!', 'success');
         // navigate('/login', { replace: true });
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+        setUser(null);
+        toast.success('Logged out successfully');
+        navigate('/login', { replace: true });
+    }
+
+    if (user && user.isLogin) {
+        return <AlreadyLoggedInModal onLogout={handleLogout} />
     }
 
     return (

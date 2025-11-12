@@ -13,6 +13,9 @@ export default defineConfig(({ mode }) => {
       federation({
         name: 'registration',
         filename: 'remoteEntry.js',
+        remotes: {
+          host: `${env.VITE_HOST_URL}/assets/remoteEntry.js`
+        },
         exposes: {
           './RegistrationApp': './src/App.jsx', // expose the entire app
         },
