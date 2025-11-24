@@ -14,6 +14,11 @@ import {
 import MicIcon from '@mui/icons-material/Mic';
 import StopIcon from '@mui/icons-material/Stop';
 
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+
 import useSpeechRecognition from '../hooks/useSpeechRecognition'
 import { useUser } from "host/UserContext";
 
@@ -39,7 +44,8 @@ const RegisterVoiceBased = () => {
         pincode: '',
         phone: '',
         email: '',
-        imageFile: null
+        imageFile: null,
+        password: ''
     })
 
     const [errors, setErrors] = useState({});
@@ -52,6 +58,10 @@ const RegisterVoiceBased = () => {
     const [voiceOpt, setVoiceOpt] = useState('');
 
     const [modalOpen, setModalOpen] = useState(false);
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
 
     const handleClose = () => {
         setModalOpen(false);
@@ -181,6 +191,15 @@ const RegisterVoiceBased = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(formData.email)) {
             newErrors.email = "Enter a valid email";
+        }
+
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        if (!passwordRegex.test(formData.password)) {
+            newErrors.password = "Password must be at least 8 characters long and contain at least one letter and one number";
+        }
+
+        if (formData.password !== formData.confirmPassword) {
+            newErrors.confirmPassword = "Passwords do not match";
         }
 
         if (!voiceOpt) {
@@ -542,6 +561,70 @@ const RegisterVoiceBased = () => {
                                 title={activeField === "email" ? 'Stop' : 'Start talking'}>
                                 {activeField === "email" ? <StopIcon style={{ color: 'red' }} /> : <MicIcon fontSize='10px' />}
                             </button>
+                        </div>
+
+                        {/* Password */}
+                        <div className={styles.textfieldGroup}>
+                            <TextField
+                                fullWidth label="Password" name="password"
+                                type={showPassword ? "text" : "password"}
+                                value={formData.password} onChange={handleChange}
+                                margin="normal"
+                                required
+                                error={Boolean(errors.password)} helperText={errors.password}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                edge="end"
+                                                // tabIndex={-1}
+                                            >
+                                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                            {/* <button
+                                type="button"
+                                tabIndex="-1"
+                                onClick={() =>
+                                    listening
+                                        ? handleStopMic()
+                                        : handleStartMic("email")
+                                }
+                                className={styles.micButton}
+                                title={activeField === "email" ? 'Stop' : 'Start talking'}>
+                                {activeField === "email" ? <StopIcon style={{ color: 'red' }} /> : <MicIcon fontSize='10px' />}
+                            </button> */}
+                        </div>
+
+                        {/* Confirm Password */}
+                        <div className={styles.textfieldGroup}>
+                            <TextField
+                                fullWidth label="Confirm Password" name="confirmPassword"
+                                type={showConfirmPassword ? "text" : "password"}
+                                value={formData.confirmPassword} onChange={handleChange}
+                                margin="normal"
+                                required
+                                error={Boolean(errors.confirmPassword)} helperText={errors.confirmPassword}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                onClick={() =>
+                                                    setShowConfirmPassword(!showConfirmPassword)
+                                                }
+                                                edge="end"
+                                                tabIndex={-1}
+                                            >
+                                                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
                         </div>
 
                         <p className={styles.subtitle}>
