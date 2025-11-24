@@ -193,9 +193,9 @@ const RegisterVoiceBased = () => {
             newErrors.email = "Enter a valid email";
         }
 
-        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        const passwordRegex = /^(?=.{8,}$)(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]).*$/;
         if (!passwordRegex.test(formData.password)) {
-            newErrors.password = "Password must be at least 8 characters long and contain at least one letter and one number";
+            newErrors.password = "Password must be at least 8 characters long and include: one uppercase letter (A–Z), one lowercase letter (a–z), one number (0–9), and one special character (e.g. !@#$%^&*).";
         }
 
         if (formData.password !== formData.confirmPassword) {
@@ -578,7 +578,7 @@ const RegisterVoiceBased = () => {
                                             <IconButton
                                                 onClick={() => setShowPassword(!showPassword)}
                                                 edge="end"
-                                                // tabIndex={-1}
+                                                tabIndex={-1}
                                             >
                                                 {showPassword ? <VisibilityOff /> : <Visibility />}
                                             </IconButton>
