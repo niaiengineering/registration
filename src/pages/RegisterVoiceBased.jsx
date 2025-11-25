@@ -133,6 +133,27 @@ const RegisterVoiceBased = () => {
         // setFormData.imageFile(imageFile);
     };
 
+    // password streanth meter
+    const passwordRules = {
+        length: (pwd) => pwd.length >= 8,
+        upper: (pwd) => /[A-Z]/.test(pwd),
+        lower: (pwd) => /[a-z]/.test(pwd),
+        number: (pwd) => /\d/.test(pwd),
+        special: (pwd) => /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(pwd),
+    };
+
+    const getStrength = (pwd) => {
+        let score = 0;
+        if (passwordRules.length(pwd)) score++;
+        if (passwordRules.upper(pwd)) score++;
+        if (passwordRules.lower(pwd)) score++;
+        if (passwordRules.number(pwd)) score++;
+        if (passwordRules.special(pwd)) score++;
+
+        if (score <= 2) return { label: "Weak", color: "red" };
+        if (score === 3) return { label: "Medium", color: "orange" };
+        return { label: "Strong", color: "green" };
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
