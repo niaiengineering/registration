@@ -255,6 +255,7 @@ const RegisterVoiceBased = () => {
         if (formData.imageFile) {
             payload.append('imageFile', formData.imageFile);
         }
+        payload.append('password', formData.password);
 
         const jsonDebug = {};
         payload.forEach((val, key) => {
