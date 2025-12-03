@@ -1,4 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
+import { Check, Download, Printer } from "lucide-react";
+import * as htmlToImage from "html-to-image";
+import QRCodeStyling from "qr-code-styling";
+import QRLogo from '../assets/qrlogo.svg';
 
 import styles from '../styles/RegisterModal.module.css';
 import { toast } from "react-toastify";
@@ -6,11 +10,16 @@ import { toast } from "react-toastify";
 export default function RegisterModal({ open, handleClose, formData }) {
   const TTL = 0.5;
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [countdown, setCountdown] = useState(TTL * 60); // State to trigger re-renders
+  const [countdown, setCountdown] = useState(TTL * 60);
   const countdownRef = useRef(TTL * 60);
   const intervalRef = useRef(null);
 
   const [confirmOtp, setConfirmOtp] = useState(false);
+  const cardRef = useRef(null);
+  const [qrDataUrl, setQrDataUrl] = useState("Sample Data To Test QR Code.");
+
+  const colors = ["#6C63FF", "#003B73", "#0077B6", "#5A189A", "#0A9396", "#9B2226"];
+  const [avatarColor] = useState(colors[Math.floor(Math.random() * colors.length)]);
 
   // Timer count(TTL)
   useEffect(() => {
@@ -91,6 +100,79 @@ export default function RegisterModal({ open, handleClose, formData }) {
     }
   }
 
+  const getInitials = (name) => {
+    const parts = name.trim().split(" ");
+    if (parts.length === 1) return parts[0][0]?.toUpperCase() || "";
+    return (parts[0][0] + parts[1][0])?.toUpperCase();
+  };
+
+  const qrRef = useRef(null);
+
+  // Generate QR code instance
+  const qrCodeRef = useRef(
+    new QRCodeStyling({
+      width: 130,
+      height: 130,
+      type: "svg",
+      data: qrDataUrl,
+      image: QRLogo,
+      dotsOptions: { color: "#000", type: "dots" },
+      backgroundOptions: { color: "transparent" },
+      cornersSquareOptions: { type: "extra-rounded" },
+      cornersDotOptions: { type: "dot" },
+      imageOptions: {
+        crossOrigin: "anonymous",
+        margin: 2,
+        imageSize: 0.4,
+      },
+    })
+  );
+
+  useEffect(() => {
+    if (confirmOtp && qrRef.current) {
+      qrCodeRef.current.append(qrRef.current);
+    }
+  }, [confirmOtp]);
+
+  const handleDownload = () => {
+    if (!cardRef.current) return;
+    htmlToImage.toPng(cardRef.current).then((dataUrl) => {
+      const link = document.createElement("a");
+      link.download = `${formData.fullName}_ID.png`;
+      link.href = dataUrl;
+      link.click();
+    });
+  };
+
+  const handlePrint = () => {
+    if (!cardRef.current) return;
+
+    htmlToImage.toPng(cardRef.current).then((dataUrl) => {
+      const printWindow = window.open("", "_blank");
+
+      printWindow.document.write(`
+      <html>
+        <head>
+          <title>ID Card</title>
+        </head>
+        <body style="margin:0; display:flex; justify-content:center; align-items:center;">
+          <img src="${dataUrl}" style="width:100%;"/>
+        </body>
+      </html>
+    `);
+
+      printWindow.document.close();
+      printWindow.focus();
+
+      // Delay the printing to allow rendering inside new window
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 500); // Increase if needed
+    });
+  };
+
+
   if (!confirmOtp) {
     return (
       <div className={styles.container}>
@@ -146,31 +228,78 @@ export default function RegisterModal({ open, handleClose, formData }) {
     )
   }
 
-
   else if (confirmOtp) {
 
     const imageUrl = formData.imageFile ? URL.createObjectURL(formData.imageFile) : null;
 
     return (
-      <div className={styles.container}>
-        <div className={styles.idCard}>
-          <div className={styles.photoSection}>
-            <img src={imageUrl} alt="Profile" className={styles.profileImage} />
-            <p className={styles.regNo}>Reg No : 123456 {formData.regNo}</p>
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+          <div className={styles.modalHeader}>
+            <h3>ID Preview</h3>
           </div>
 
-          <div className={styles.detailsSection}>
-            <p className={styles.name}>Name : {formData.fullName}</p>
-            <p>City : {formData.city}</p>
-            <p>Pincode : {formData.pincode}</p>
-            <p>Phone : {formData.phone}</p>
-          </div>
+          <div className={styles.idCard} ref={cardRef}>
+            <div className={styles.topRow}>
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt="Profile"
+                  className={styles.idPhoto}
+                />
+              ) : (
+                <div
+                  className={styles.initialsCircle}
+                  style={{ backgroundColor: avatarColor }}
+                >
+                  {getInitials(formData.fullName || "N A")}
+                </div>
+              )}
 
-          <button className={styles.confirmBtn} onClick={handleClose}>
-            Confirm
-          </button>
+              <div className={styles.qrCodeBox}>
+                <div className={styles.qrPlaceholder} ref={qrRef}></div>
+              </div>
+            </div>
+
+            <h2 className={styles.name}>{formData.fullName}</h2>
+
+
+            <div className={styles.detailsGrid}>
+              <div>
+                <p className={styles.idPlaceholder}>Reg No</p>
+                <p className={styles.idValue}>123456 {formData.regNo}</p>
+                <p className={styles.idPlaceholder}>Phone</p>
+                <p className={styles.idValue}>{formData.phone}</p>
+                <p className={styles.idPlaceholder}>Pincode</p>
+                <p className={styles.idValue}>{formData.pincode}</p>
+              </div>
+              <div>
+                <p className={styles.idPlaceholder}>Age</p>
+                <p className={styles.idValue}>{formData.age}</p>
+                <p className={styles.idPlaceholder}>Email</p>
+                <p className={styles.idValue}>{formData.email}</p>
+                <p className={styles.idPlaceholder}>City</p>
+                <p className={styles.idValue}>{formData.city}</p>
+              </div>
+            </div>
+          </div>
+          <div className={styles.footer}>
+            <button className={styles.confirmBtn} onClick={handleClose}>
+              <Check size={20} />
+            </button>
+            <div className={styles.actionBtns}>
+              <button className={styles.iconBtn} onClick={handleDownload}>
+                <Download size={20} />
+              </button>
+
+              <button className={styles.iconBtn} onClick={handlePrint}>
+                <Printer size={20} />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+
     );
   }
 

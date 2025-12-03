@@ -74,58 +74,167 @@
   color: white;
 }
 
-/* Id card */
-.idCard {
-  width: 400px;
-  margin: 10px;
-  border: 2px solid #ccc;
-  border-radius: 12px;
-  padding: 30px;
-  background: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.photoSection {
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(20, 20, 20, 0.6);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  z-index: 999;
+  backdrop-filter: blur(3px);
 }
 
-.profileImage {
-  width: 200px;
-  height: 200px;
-  border-radius: 8px;
-  object-fit: cover;
-  margin-bottom: 8px;
+.modalCard {
+  background: #f9fafb;
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  animation: modalFadeIn 0.3s ease-in-out;
 }
 
-.regNo {
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.modalHeader h3 {
+  font-size: 18px;
   font-weight: 600;
-  color: #444;
-  font-size: 14px;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.backIcon {
+  cursor: pointer;
+  color: var(--text-color);
+  transition: transform 0.2s;
+}
+
+.backIcon:hover {
+  transform: translateX(-3px);
+}
+
+.idCard {
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 20px;
+  /* text-align: center; */
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.idPhoto {
+  width: 125px;
+  height: 125px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 2px solid var(--border-color);
+  transition: tranform 0.2s ease-in-out;
+}
+
+.idPhoto:hover {
+  transform: scale(1.05);
+}
+
+.initialsCircle {
+  width: 125px;
+  height: 125px;
+  border-radius: 10px;
+  color: var(--background);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+}
+
+.qrCodeBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 125px;
+  height: 125px;
+}
+
+.qrPlaceholder {
+  font-size: 12px;
+  color: var(--text-color);
 }
 
 .name {
-  font-size: 18px;
-  font-weight: 600;
-  color: #334EAC;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 8px 0;
+  color: var(--text-color);
 }
 
-p {
+.idPlaceholder {
+  font-size: 14px;
+  color: var(--text-color);
   margin: 4px 0;
 }
 
-.detailsSection {
-  margin-top: 12px;
+.idValue {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 4px 0 12px 0;
+  line-height: 1.4;
+  word-break: break-all;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  display: block;
 }
 
-.confirmBtn {
-  margin-top: 16px;
-  border: 2px solid #334EAC;
-  background: white;
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  text-align: left;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width:425px) {
+  .idCard {
+    padding: 0;
+  }
+}
+
+.footer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.confirmBtn { 
+  border: none;
   color: #334EAC;
-  padding: 8px 16px;
+  padding: 8px;
   border-radius: 8px;
   cursor: pointer;
 }
@@ -137,4 +246,25 @@ p {
 
 .confirmBtn:focus {
   outline: none;
+}
+
+.actionBtns {
+  display: flex;
+  gap: 12px;
+}
+
+.iconBtn {
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: 0.2s ease;
+  color: #334EAC;
+}
+
+.iconBtn:hover {
+  background: #334EAC;
+  color: white;
 }
