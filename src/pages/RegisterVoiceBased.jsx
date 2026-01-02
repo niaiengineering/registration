@@ -45,7 +45,8 @@ const RegisterVoiceBased = () => {
         phone: '',
         email: '',
         imageFile: null,
-        password: ''
+        password: '',
+        registrationRole: ''
     })
 
     const [errors, setErrors] = useState({});
@@ -223,6 +224,10 @@ const RegisterVoiceBased = () => {
             newErrors.confirmPassword = "Passwords do not match";
         }
 
+        if (!formData.registrationRole) {
+            newErrors.registrationRole = "Registration role is required";
+        }
+
         if (!voiceOpt) {
             newErrors.voiceOpt = "Please select an option";
         } else if (['yes', 'no'].includes(voiceOpt.toLowerCase())) {
@@ -256,6 +261,7 @@ const RegisterVoiceBased = () => {
             payload.append('imageFile', formData.imageFile);
         }
         payload.append('password', formData.password);
+        payload.append('registrationRole', formData.registrationRole);
 
         const jsonDebug = {};
         payload.forEach((val, key) => {
@@ -332,6 +338,7 @@ const RegisterVoiceBased = () => {
                                 {activeField === "fullName" ? <StopIcon style={{ color: 'red' }} /> : <MicIcon fontSize='10px' />}
                             </button>
                         </div>
+
                         {/* Parent name */}
                         <div className={styles.textfieldGroup}>
                             <TextField
@@ -649,37 +656,71 @@ const RegisterVoiceBased = () => {
                             />
                         </div>
 
-                        <p className={styles.subtitle}>
-                            Would you like to take a picture of yourself?
-                        </p>
-
-                        {/* Radio Buttons */}
-                        <div className={styles.radioGroup}>
-                            <label>
-                                <input
-                                    type="radio"
-                                    value="yes"
-                                    checked={voiceOpt === 'yes'}
-                                    onChange={handleOptChange}
-                                />
-                                Yes
-                            </label>
-                            <label>
-                                <input
-                                    type="radio"
-                                    value="no"
-                                    checked={voiceOpt === 'no'}
-                                    onChange={handleOptChange}
-                                />
-                                No
-                            </label>
+                        {/* Registration Role */}
+                        <div className={styles.textfieldGroup}>
+                            <FormControl
+                                fullWidth
+                                margin="normal"
+                                required
+                                error={Boolean(errors.registrationRole)}
+                            >
+                                <InputLabel id="registration-role-label">
+                                    Registration Role
+                                </InputLabel>
+                                <Select
+                                    labelId="registration-role-label"
+                                    name="registrationRole"
+                                    value={formData.registrationRole}
+                                    onChange={handleChange}
+                                    label="Registration Role"
+                                >
+                                    <MenuItem value="patient">Patient</MenuItem>
+                                    <MenuItem value="doctor">Doctor</MenuItem>
+                                    <MenuItem value="frontdesk">Front Desk</MenuItem>
+                                    <MenuItem value="admin">Admin</MenuItem>
+                                    <MenuItem value="nursing">Nursing</MenuItem>
+                                    <MenuItem value="office-staff">Office Staff</MenuItem>
+                                </Select>
+                                {errors.registrationRole && (
+                                    <FormHelperText>{errors.registrationRole}</FormHelperText>
+                                )}
+                            </FormControl>
                         </div>
 
-                        {errors.voiceOpt && (
-                            <div className={styles.imageError}>
-                                {errors.voiceOpt && <span>{errors.voiceOpt}</span>}
+                        {/* Full width section */}
+                        <div className={styles.fullWidth}>
+                            <p className={styles.subtitle}>
+                                Would you like to take a picture of yourself?
+                            </p>
+
+                            {/* Radio Buttons */}
+                            <div className={styles.radioGroup}>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="yes"
+                                        checked={voiceOpt === 'yes'}
+                                        onChange={handleOptChange}
+                                    />
+                                    Yes
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="no"
+                                        checked={voiceOpt === 'no'}
+                                        onChange={handleOptChange}
+                                    />
+                                    No
+                                </label>
                             </div>
-                        )}
+
+                            {errors.voiceOpt && (
+                                <div className={styles.imageError}>
+                                    {errors.voiceOpt && <span>{errors.voiceOpt}</span>}
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <div className={styles.submitWrapper}>

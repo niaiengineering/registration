@@ -16,6 +16,12 @@
     gap: 8px;
 }
 
+.fullWidth {
+    grid-column: 1 / -1; /* span full row */
+    place-items: center;
+}
+
+
 @media (max-width: 768px) {
     .formGrid {
         grid-template-columns: 1fr;
