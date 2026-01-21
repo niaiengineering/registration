@@ -144,19 +144,68 @@ export default function RegisterModal({ open, handleClose, formData }) {
     });
   };
 
+  // const handlePrint = () => {
+  //   if (!cardRef.current) return;
+
+  //   htmlToImage.toPng(cardRef.current).then((dataUrl) => {
+  //     const printWindow = window.open("", "_blank");
+
+  //     printWindow.document.write(`
+  //     <html>
+  //       <head>
+  //         <title>ID Card</title>
+  //       </head>
+  //       <body style="margin:0; display:flex; justify-content:center; align-items:center;">
+  //         <img src="${dataUrl}" style="width:100%;"/>
+  //       </body>
+  //     </html>
+  //   `);
+
+  //     printWindow.document.close();
+  //     printWindow.focus();
+
+  //     // Delay the printing to allow rendering inside new window
+  //     setTimeout(() => {
+  //       printWindow.print();
+  //       printWindow.close();
+  //     }, 500); // Increase if needed
+  //   });
+  // };
+
   const handlePrint = () => {
     if (!cardRef.current) return;
 
-    htmlToImage.toPng(cardRef.current).then((dataUrl) => {
+    htmlToImage.toPng(cardRef.current, { pixelRatio: 3 }).then((dataUrl) => {
       const printWindow = window.open("", "_blank");
 
       printWindow.document.write(`
       <html>
         <head>
           <title>ID Card</title>
+          <style>
+            @page {
+              size: 85.6mm 54mm; /* ID card size */
+              margin: 0;
+            }
+
+            body {
+              margin: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 85.6mm;
+              height: 54mm;
+            }
+
+            img {
+              width: 85.6mm;
+              height: 54mm;
+              object-fit: contain;
+            }
+          </style>
         </head>
-        <body style="margin:0; display:flex; justify-content:center; align-items:center;">
-          <img src="${dataUrl}" style="width:100%;"/>
+        <body>
+          <img src="${dataUrl}" />
         </body>
       </html>
     `);
@@ -164,14 +213,12 @@ export default function RegisterModal({ open, handleClose, formData }) {
       printWindow.document.close();
       printWindow.focus();
 
-      // Delay the printing to allow rendering inside new window
       setTimeout(() => {
         printWindow.print();
         printWindow.close();
-      }, 500); // Increase if needed
+      }, 500);
     });
   };
-
 
   if (!confirmOtp) {
     return (
